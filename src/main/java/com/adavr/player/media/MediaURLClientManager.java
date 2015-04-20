@@ -44,7 +44,7 @@ public class MediaURLClientManager {
 		URL url;
 		try {
 			url = new URI(uri).toURL();
-		} catch (URISyntaxException | MalformedURLException ex) {
+		} catch (Exception ex) {
 			return null;
 		}
 		for (MediaURLClient client : urlClients) {
