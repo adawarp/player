@@ -28,14 +28,11 @@ import org.saintandreas.math.Vector3f;
  * @author Shotaro Uchida <fantom@xmaker.mx>
  */
 public class PictureApplication implements ApplicationContext {
-
-	private static final String VERTEX_SHADER = "com/adavr/shader/vertex.glsl";
-	private static final String FRAGMENT_SHADER = "com/adavr/shader/fragment.glsl";
 	
 	private final ShaderContext shaderCtx;
 	
 	public PictureApplication(String picture) {
-		shaderCtx = new ShaderContext(VERTEX_SHADER, FRAGMENT_SHADER);
+		shaderCtx = new ShaderContext();
 		PictureContext context = new PictureContext(6.0f, 6.0f, new File(picture));
 		context.setOffset(new Vector3f(0.0f, 0.0f, -3.0f));
 		shaderCtx.addContext(context);

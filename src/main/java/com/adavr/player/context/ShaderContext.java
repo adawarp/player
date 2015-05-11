@@ -30,6 +30,9 @@ import org.saintandreas.math.Matrix4f;
  */
 public class ShaderContext implements SceneRenderContext {
 
+	public static final String DEFAULT_VERTEX_SHADER = "com/adavr/shader/vertex.glsl";
+	public static final String DEFAULT_FRAGMENT_SHADER = "com/adavr/shader/fragment.glsl";
+	
 	private final ArrayList<RenderContext> contexts = new ArrayList<>();
 	private final String vertexShaderName;
 	private final String fragmentShaderName;
@@ -40,6 +43,10 @@ public class ShaderContext implements SceneRenderContext {
 	public ShaderContext(String vertexShaderName, String fragmentShaderName) {
 		this.vertexShaderName = vertexShaderName;
 		this.fragmentShaderName = fragmentShaderName;
+	}
+	
+	public ShaderContext() {
+		this(DEFAULT_VERTEX_SHADER, DEFAULT_FRAGMENT_SHADER);
 	}
 	
 	@Override

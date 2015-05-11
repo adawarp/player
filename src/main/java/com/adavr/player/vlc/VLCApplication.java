@@ -28,16 +28,13 @@ import uk.co.caprica.vlcj.version.LibVlcVersion;
  * @author Shotaro Uchida <fantom@xmaker.mx>
  */
 public class VLCApplication implements ApplicationContext {
-
-	private static final String VERTEX_SHADER = "com/adavr/shader/vertex.glsl";
-	private static final String FRAGMENT_SHADER = "com/adavr/shader/fragment.glsl";
 	
 	private final ShaderContext shaderCtx;
 	private final VLCContext vlcCtx;
 	
 	public VLCApplication() {
 		System.out.println("LibVLC: " + LibVlcVersion.getVersion().version());
-		shaderCtx = new ShaderContext(VERTEX_SHADER, FRAGMENT_SHADER);
+		shaderCtx = new ShaderContext();
 		vlcCtx = new VLCContext(8.0f, 4.5f, 1920, 1080);
 		vlcCtx.setOffset(new Vector3f(0.0f, 0.0f, -3.0f));
 		shaderCtx.addContext(vlcCtx);
