@@ -16,29 +16,15 @@
  */
 package com.adavr.player.hmd;
 
-import com.adavr.player.context.RenderContext;
+import org.saintandreas.math.Matrix4f;
+import org.saintandreas.math.Quaternion;
+import org.saintandreas.math.Vector3f;
 
 /**
  *
  * @author Shotaro Uchida <fantom@xmaker.mx>
  */
-public interface HMDRenderContext extends RenderContext {
-
-	public int getPreferredWidth();
+public interface HMDStatusListener {
 	
-	public int getPreferredHeight();
-	
-	public long getPreferredMonitor();
-	
-	public void resetCamera();
-
-	public void updateCamera(float x, float y, float z);
-	
-	public boolean isHeadTrackingEnabled();
-	
-	public void setHeadTrackingEnabled(boolean enabled);
-	
-	public void addStatusListener(HMDStatusListener listener);
-	
-	public void removeStatusListener(HMDStatusListener listener);
+	public void update(Vector3f position, Quaternion orientation, Matrix4f projectionMatrix);
 }

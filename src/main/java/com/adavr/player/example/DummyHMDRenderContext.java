@@ -20,6 +20,7 @@ import com.adavr.player.Utils;
 import com.adavr.player.context.RenderContext;
 import com.adavr.player.context.SceneRenderContext;
 import com.adavr.player.hmd.HMDRenderContext;
+import com.adavr.player.hmd.HMDStatusListener;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 import org.saintandreas.math.Matrix4f;
@@ -70,6 +71,12 @@ public class DummyHMDRenderContext implements RenderContext, HMDRenderContext {
 	@Override
 	public void setHeadTrackingEnabled(boolean enabled) { }
 
+	@Override
+	public void addStatusListener(HMDStatusListener listener) { }
+	
+	@Override
+	public void removeStatusListener(HMDStatusListener listener) { }
+	
 	@Override
 	public void loop() {
 		Matrix4f viewMatrix = new Matrix4f();
