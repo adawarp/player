@@ -33,11 +33,15 @@ public class VLCApplication implements ApplicationContext {
 	private final VLCContext vlcCtx;
 	
 	public VLCApplication() {
-		System.out.println("LibVLC: " + LibVlcVersion.getVersion().version());
 		shaderCtx = new ShaderContext();
 		vlcCtx = new VLCContext(8.0f, 4.5f, 1920, 1080);
 		vlcCtx.setOffset(new Vector3f(0.0f, 0.0f, -3.0f));
 		shaderCtx.addContext(vlcCtx);
+	}
+	
+	@Override
+	public void setup() {
+		System.out.println("LibVLC: " + LibVlcVersion.getVersion().version());
 	}
 
 	@Override
@@ -49,4 +53,7 @@ public class VLCApplication implements ApplicationContext {
 	public MediaContext getMediaContext() {
 		return vlcCtx;
 	}
+	
+	@Override
+	public void destroy () { }
 }

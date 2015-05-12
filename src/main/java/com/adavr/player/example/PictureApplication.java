@@ -39,6 +39,9 @@ public class PictureApplication implements ApplicationContext {
 	}
 	
 	@Override
+	public void setup() { }
+	
+	@Override
 	public SceneRenderContext getSceneRenderContext() {
 		return shaderCtx;
 	}
@@ -47,4 +50,7 @@ public class PictureApplication implements ApplicationContext {
 	public MediaContext getMediaContext() {
 		return null;
 	}
+	
+	@Override
+	public void destroy () { }
 }

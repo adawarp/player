@@ -20,6 +20,7 @@ import com.adavr.player.hmd.HMDRenderContextFactory;
 import com.adavr.player.hmd.HMDKeyCallback;
 import com.adavr.player.hmd.HMDRenderContext;
 import com.adavr.player.example.DummyHMDRenderContext;
+import com.adavr.player.hmd.HMDStatusListener;
 import com.adavr.player.media.MediaContext;
 import com.adavr.player.media.MediaPlayerKeyCallback;
 import org.lwjgl.Sys;
@@ -90,6 +91,10 @@ public class Application implements Runnable {
 			hmdCtx = new DummyHMDRenderContext(appCtx.getSceneRenderContext());
 		}
 		
+		if (appCtx instanceof HMDStatusListener) {
+			hmdCtx.addStatusListener((HMDStatusListener) appCtx);
+		}
+		
 		final long monitor = hmdCtx.getPreferredMonitor();
 		final int width = hmdCtx.getPreferredWidth();
 		final int height = hmdCtx.getPreferredHeight();
@@ -119,6 +124,7 @@ public class Application implements Runnable {
 
 		System.out.println("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
 
+		appCtx.setup();
 		hmdCtx.setup();
 		while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
 			counter.tick();
@@ -129,5 +135,6 @@ public class Application implements Runnable {
 			GLFW.glfwPollEvents();
 		}
 		hmdCtx.destroy();
+		appCtx.destroy();
 	}
 }

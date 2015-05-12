@@ -25,6 +25,10 @@ import com.adavr.player.media.MediaContext;
  */
 public interface ApplicationContext {
 	
+	public void setup();
+	
+	public void destroy();
+	
 	public SceneRenderContext getSceneRenderContext();
 	
 	public MediaContext getMediaContext();
