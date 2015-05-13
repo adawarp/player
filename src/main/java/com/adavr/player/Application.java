@@ -35,6 +35,7 @@ import org.lwjgl.system.MemoryUtil;
 public class Application implements Runnable {
 
 	private final ApplicationContext appCtx;
+	private MediaContext mediaCtx;
 
 	private HMDRenderContextFactory hmdCtxFactory;
 	private HMDRenderContext hmdCtx;
@@ -104,7 +105,7 @@ public class Application implements Runnable {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 
-		MediaContext mediaCtx = appCtx.getMediaContext();
+		mediaCtx = appCtx.getMediaContext();
 		if (mediaCtx != null) {
 			keyCallback = new MediaPlayerKeyCallback(hmdCtx, mediaCtx);
 		} else {
@@ -133,6 +134,9 @@ public class Application implements Runnable {
 				GLFW.glfwSwapBuffers(window);
 			}
 			GLFW.glfwPollEvents();
+		}
+		if (mediaCtx != null) {
+			mediaCtx.stop();
 		}
 		hmdCtx.destroy();
 		appCtx.destroy();

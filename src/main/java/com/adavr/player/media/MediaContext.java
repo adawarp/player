@@ -33,4 +33,6 @@ public interface MediaContext {
 	public void seek(long length);
 
 	public void rewind();
+	
+	public void stop();
 }
