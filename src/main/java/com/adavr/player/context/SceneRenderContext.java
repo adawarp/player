@@ -26,5 +26,7 @@ public interface SceneRenderContext extends RenderContext {
 	
 	public void addContext(RenderContext context);
 	
+	public void removeContext(RenderContext context);
+	
 	public void updateMatrix(Matrix4f projectionMatrix, Matrix4f modelViewMatrix);
 }

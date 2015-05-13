@@ -33,7 +33,10 @@ public class ShaderContext implements SceneRenderContext {
 	public static final String DEFAULT_VERTEX_SHADER = "com/adavr/shader/vertex.glsl";
 	public static final String DEFAULT_FRAGMENT_SHADER = "com/adavr/shader/fragment.glsl";
 	
-	private final ArrayList<RenderContext> contexts = new ArrayList<>();
+	private final Object contextLock = new Object();
+	private final ArrayList<RenderContext> newContexts = new ArrayList<>();
+	private final ArrayList<RenderContext> currentContexts = new ArrayList<>();
+	private final ArrayList<RenderContext> oldContexts = new ArrayList<>();
 	private final String vertexShaderName;
 	private final String fragmentShaderName;
 	protected Program program;
@@ -51,7 +54,41 @@ public class ShaderContext implements SceneRenderContext {
 	
 	@Override
 	public void addContext(RenderContext context) {
-		contexts.add(context);
+		synchronized (contextLock) {
+			if (!currentContexts.contains(context)) {
+				newContexts.add(context);
+			}
+		}
+	}
+
+	@Override
+	public void removeContext(RenderContext context) {
+		synchronized (contextLock) {
+			if (currentContexts.contains(context)) {
+				oldContexts.add(context);
+			}
+		}
+	}
+	
+	private void updateContexts() {
+		synchronized (contextLock) {
+			if (!newContexts.isEmpty()) {
+				for (RenderContext context : newContexts) {
+					context.setup();
+					// Move to currents
+					currentContexts.add(context);
+				}
+				newContexts.clear();
+			}
+			if (!oldContexts.isEmpty()) {
+				for (RenderContext context : oldContexts) {
+					context.destroy();
+					// Remove from currents
+					currentContexts.remove(context);
+				}
+				oldContexts.clear();
+			}
+		}
 	}
 
 	@Override
@@ -79,9 +116,6 @@ public class ShaderContext implements SceneRenderContext {
 
 	@Override
 	public void setup() {
-		for (RenderContext context : contexts) {
-			context.setup();
-		}
 		vertexShader = loadShader(vertexShaderName, GL20.GL_VERTEX_SHADER);
 		fragmentShader = loadShader(fragmentShaderName, GL20.GL_FRAGMENT_SHADER);
 		program = Program.create();
@@ -95,9 +129,10 @@ public class ShaderContext implements SceneRenderContext {
 
 	@Override
 	public void loop() {
+		updateContexts();
 		Program.bind(program);
 		{
-			for (RenderContext context : contexts) {
+			for (RenderContext context : currentContexts) {
 				context.loop();
 			}
 		}
@@ -112,7 +147,7 @@ public class ShaderContext implements SceneRenderContext {
 		vertexShader.destroy();
 		fragmentShader.destroy();
 		program.destroy();
-		for (RenderContext context : contexts) {
+		for (RenderContext context : currentContexts) {
 			context.destroy();
 		}
 	}
