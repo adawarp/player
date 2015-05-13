@@ -17,6 +17,7 @@
 package com.adavr.player.vlc;
 
 import com.adavr.player.ApplicationContext;
+import com.adavr.player.context.LogoContext;
 import com.adavr.player.context.SceneRenderContext;
 import com.adavr.player.context.ShaderContext;
 import com.adavr.player.media.MediaContext;
@@ -34,6 +35,9 @@ public class VLCApplication implements ApplicationContext {
 	
 	public VLCApplication() {
 		shaderCtx = new ShaderContext();
+		LogoContext logoCtx = new LogoContext(8.0f, 4.5f);
+		logoCtx.setOffset(new Vector3f(0.0f, 0.0f, -3.0f));
+		shaderCtx.addContext(logoCtx);
 		vlcCtx = new VLCContext(8.0f, 4.5f, 1920, 1080);
 		vlcCtx.setOffset(new Vector3f(0.0f, 0.0f, -3.0f));
 		shaderCtx.addContext(vlcCtx);

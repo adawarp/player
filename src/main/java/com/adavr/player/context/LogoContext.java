@@ -16,55 +16,34 @@
  */
 package com.adavr.player.context;
 
-import java.nio.IntBuffer;
 import com.adavr.player.globjects.Texture;
-import java.nio.ByteBuffer;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import java.io.IOException;
+import java.io.InputStream;
 import org.lwjgl.opengl.GL13;
 
 /**
  *
  * @author Shotaro Uchida <fantom@xmaker.mx>
  */
-public class RGBVideoContext extends QuadContext {
+public class LogoContext extends QuadContext {
 
-	private final int videoWidth;
-	private final int videoHeight;
+	private static final String LOGO = "logo.png";
+
 	private Texture texture;
 
-	public RGBVideoContext(float width, float height, int videoWidth, int videoHeight) {
+	public LogoContext(float width, float height) {
 		super(width, height);
-		this.videoWidth = videoWidth;
-		this.videoHeight = videoHeight;
-	}
-	
-	public int getVideoWidth() {
-		return videoWidth;
-	}
-	
-	public int getVideoHeight() {
-		return videoHeight;
-	}
-
-	public void setPixels(IntBuffer pixels) {
-		Texture.bind(texture);
-//		GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, stride);
-		GL11.glTexSubImage2D(texture.getTarget(), 0, 0, 0, videoWidth, videoHeight,
-				GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, pixels);
 	}
 
 	@Override
 	public void setup() {
 		super.setup();
-		ByteBuffer buffer = BufferUtils.createByteBuffer(4 * videoWidth * videoHeight);
-		for (int i = 0; i < buffer.capacity(); i++) {
-			buffer.put((byte) 0);
+		try (InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(LOGO)) {
+			Texture.Image image = Texture.loadPNG(is);
+			texture = Texture.create(image);
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
-		buffer.flip();
-		texture = Texture.create(GL11.GL_RGBA, videoWidth, videoHeight,
-				GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 
 	@Override

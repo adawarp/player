@@ -45,9 +45,8 @@ public class VLCContext extends RGBVideoContext implements MediaContext {
 	private IntBuffer buffer = null;
 
 	public VLCContext(float width, float height, final int videoWidth, final int videoHeight) {
-		super(width, height);
+		super(width, height, videoWidth, videoHeight);
 
-		setVideoSize(videoWidth, videoHeight);
 		BufferFormatCallback bufferFormatCallback = new BufferFormatCallback() {
 			@Override
 			public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
@@ -108,6 +107,11 @@ public class VLCContext extends RGBVideoContext implements MediaContext {
 	@Override
 	public void rewind() {
 		getMediaPlayer().setPosition(0);
+	}
+
+	@Override
+	public void stop() {
+		getMediaPlayer().stop();
 	}
 
 	@Override
