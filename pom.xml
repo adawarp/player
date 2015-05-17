@@ -9,7 +9,7 @@
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.0a</version>
         </dependency>
         <dependency>
             <groupId>org.l33tlabs.twl</groupId>
