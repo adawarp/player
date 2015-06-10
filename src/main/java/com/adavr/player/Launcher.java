@@ -17,7 +17,7 @@
 package com.adavr.player;
 
 import com.adavr.player.hmd.HMDRenderContextFactory;
-import com.adavr.player.example.PictureApplication;
+import com.adavr.player.vlc.VLCApplication;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -31,9 +31,6 @@ import org.apache.commons.cli.ParseException;
  */
 public class Launcher {
 
-	public static final String APPLICATION_NAME = "com.adavr.applicationContextName";
-	public static final String DEFAULT_APPLICATION = "com.adavr.player.vlc.VLCApplication";
-	public static final String HMD_FACTORY_NAME = "com.adavr.hmd.factoryName";
 	private static final Options OPTIONS = createOptions();
 
 	public static void main(String[] args) {
@@ -49,21 +46,25 @@ public class Launcher {
 			showUsage();
 			return;
 		}
-
-		String src = cl.getOptionValue("source");
 		
-		ApplicationContext appCtx = loadApplicationContext();
+		ApplicationContext appCtx = (ApplicationContext) loadClass(cl.getOptionValue("context"));
 		if (appCtx == null) {
-			appCtx = new PictureApplication(src);
+			appCtx = new VLCApplication();
 		}
-		appCtx.getMediaContext().setMedia(src);
+		if (cl.hasOption("source")) {
+			String src = cl.getOptionValue("source");
+			appCtx.getMediaContext().setMedia(src);
+		}
 		
 		Application application = new Application(appCtx);
 		application.setVSync(cl.hasOption("vsync"));
-		try {
-			application.setHMDRenderContextFactory(
-					loadHMDRenderContextFactory());
-		} catch (Exception ignore) { }
+		if (cl.hasOption("factory")) {
+			String className = cl.getOptionValue("factory");
+			HMDRenderContextFactory factory = (HMDRenderContextFactory) loadClass(className);
+			if (factory != null) {
+				application.setHMDRenderContextFactory(factory);
+			}
+		}
 
 		application.run();
 	}
@@ -80,9 +81,22 @@ public class Launcher {
 				.withLongOpt("source")
 				.withArgName("file")
 				.hasArgs(1)
-				.isRequired()
 				.withDescription("Select source file")
 				.create("s")
+		);
+		options.addOption(
+				OptionBuilder
+				.withLongOpt("context")
+				.withArgName("class")
+				.hasArgs(1)
+				.create("c")
+		);
+		options.addOption(
+				OptionBuilder
+				.withLongOpt("factory")
+				.withArgName("class")
+				.hasArgs(1)
+				.create("f")
 		);
 		options.addOption(
 				OptionBuilder
@@ -99,19 +113,10 @@ public class Launcher {
 		return options;
 	}
 	
-	public static HMDRenderContextFactory loadHMDRenderContextFactory() throws Exception {
-		Class clazz = Class.forName(System.getProperty(HMD_FACTORY_NAME));
-		Object obj = clazz.newInstance();
-		if (!(obj instanceof HMDRenderContextFactory)) {
-			return null;
-		}
-		return (HMDRenderContextFactory) obj;
-	}
-	
-	public static ApplicationContext loadApplicationContext() {
+	public static Object loadClass(String className) {
 		try {
-			Class clazz = Class.forName(System.getProperty(APPLICATION_NAME, DEFAULT_APPLICATION));
-			return (ApplicationContext) clazz.newInstance();
+			Class clazz = Class.forName(className);
+			return clazz.newInstance();
 		} catch (Exception ex) {
 			return null;
 		}

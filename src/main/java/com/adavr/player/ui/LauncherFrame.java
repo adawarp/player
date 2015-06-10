@@ -18,7 +18,7 @@ package com.adavr.player.ui;
 
 import com.adavr.player.Application;
 import com.adavr.player.ApplicationContext;
-import com.adavr.player.Launcher;
+import com.adavr.player.vlc.VLCApplication;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -149,7 +149,7 @@ public class LauncherFrame extends javax.swing.JFrame {
 		}
 		String url = urlField.getText();
 		boolean riftEnabled = riftCheckBox.isSelected();
-		ApplicationContext appCtx = Launcher.loadApplicationContext();
+		ApplicationContext appCtx = new VLCApplication();
 		appCtx.getMediaContext().setMedia(url);
 		Runnable r = new Application(appCtx);
 		f = service.submit(r);
