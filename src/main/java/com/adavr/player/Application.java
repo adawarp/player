@@ -124,6 +124,7 @@ public class Application implements Runnable {
 		GLContext.createFromCurrent();
 
 		System.out.println("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
+		System.out.println("App Context: " + appCtx.getClass().getName());
 
 		appCtx.setup();
 		hmdCtx.setup();

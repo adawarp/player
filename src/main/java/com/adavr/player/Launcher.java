@@ -49,6 +49,7 @@ public class Launcher {
 		
 		ApplicationContext appCtx = (ApplicationContext) loadClass(cl.getOptionValue("context"));
 		if (appCtx == null) {
+			System.out.println("Failed to load App Context");
 			appCtx = new VLCApplication();
 		}
 		if (cl.hasOption("source")) {
